@@ -35,6 +35,10 @@ table, th, td {
     padding: 8px;
 }
 
+thead {
+    font-weight: bold;
+}
+
 .custom-link {
     position: relative;
     color: #000; 
