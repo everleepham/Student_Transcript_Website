@@ -1,26 +1,28 @@
 import mysql.connector
 import os
 
-emails = ['albina.glick@epita.fr', 'ammie.corrio@epita.fr', 'bette.nicka@epita.fr', 'bernardo.figeroa@epita.fr', 
-          'blondell.pugh@epita.fr', 'cammy.albares@epita.fr', 'carmelina.lindall@epita.fr', 'cecily.hollack@epita.fr',
-          'danica.bruschke@epita.fr', ...]
+names = ['Honeywell Arlette', 'Glick Albina', 'Slusarski Alisha', 'Iturbide Allene', 'Maclead Abel', 'Monarrez Amber',
+         'Corrio Ammie', 'Venere Art', 'Sergi Alishia', 'Bolognia Brock', 'Nicka Bette', 'Figeroa Bernardo', 'Malet Blair',
+          'Pugh Blondell', 'Rhym Bobbye', 'Albares Cammy', 'Vanheusen Carma' ]
 
-# original_file = 'Population.html'
+original = 'grades.html'
 
-def connect(db_url: str, db_user: str, db_password: str) -> mysql.connector.connection.MySQLConnection:
+def connect(db_host: str, db_port: int, db_user: str, db_password: str, db_name: str) -> mysql.connector.connection.MySQLConnection:
     """
-    connects to the MySQL database
+    Connects to the MySQL database
     :return: a connection object
     """
     conn = mysql.connector.connect(
-        host=db_url,
+        host=db_host,
+        port=db_port,
         user=db_user,
-        password=db_password
+        password=db_password,
+        database=db_name
     )
     return conn
 
-# TODO read those configuration entries from a configuration file
-url: str = 'jdbc:mysql://localhost:3245/project'
-user: str = 'admin'
-password: str = 'admin'
-database_name: str = 'project'
+host = 'localhost'
+port = 3245  
+user = 'admin'
+password = 'admin'
+database_name = 'project'
