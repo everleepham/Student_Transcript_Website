@@ -1,18 +1,19 @@
 import mysql.connector
 import os
 
-names = ['Honeywell Arlette', 'Glick Albina', 'Slusarski Alisha', 'Iturbide Allene', 'Maclead Abel', 'Monarrez Amber', 'Corrio Ammie', 'Venere Art', 'Sergi Alishia', 'Bolognia Brock', 'Nicka Bette', 'Figeroa Bernardo', 'Malet Blair', 'Pugh Blondell', 'Rhym Bobbye', 'Albares Cammy', 'Vanheusen Carma', 'Lindall Carmelina', 'Hollack Cecily', 'Caudy Chanel', 'Gibes Cory', 'Bruschke Danica', 'Juhas Deeanna', 'Crupi Delisa', 'Ahle Delmy', 'Chickering Devorah', 'Oldroyd Dyan', 'Dickerson Dominque', 'Foller Donette', 'Morocco Elly', 'Benimadho Elvera', 'Lipke Elza', 'Bowley Emerson', 'Ferencz Erick', 'Stenseth Ernie', 'Chui Ezekiel', 'Flosi Fletcher', 'Vocelka Francine', 'Saylors Fatima', 'Rim Gladys', 'Ruta Graciela', 'Eroman Ilene', 'Vanausdal Jamal', 'Butt James', 'Briddick Jina', 'Abdallah Johnetta', 'Stockham Jose', 'Darakjy Josephine', 'Blackwood Kallie', 'Waycott Kanisha', 'Klonowski Karl', 'Rulapaugh Kati', 'Caldarera Kiley', 'Marrier Kris', 'Gato Lai', 'Reitler Laurel', 'Dilliard Leota', 'Isenhower Lettie', 'Centini Lisha', 'Nestle Lorrie', 'Paprocki Lenna', 'Perin Lavera', 'Hochard Malinda', 'Poquette Mattie', 'Yglesias Maurine', 'Garufi Meaghan', 'Rhymes Micaela', 'Amigon Minna', 'Tollner Mitsue', 'Mastella Marjory', 'Munns Myra', 'Parlato Moon', 'Royster Maryann', 'Fern Natalie', 'Weight Penney', 'Campain Roxane', 'Ostrosky Rozella', 'Uyetake Sabra', 'Wieser Sage', 'Seewald Shenika', 'Morasca Simona', 'Shinko Solange', 'Barfield Stephaine', 'Emigh Stephen', 'Hoogland Tamar', 'Buvens Tawna', 'Mulqueen Timothy', 'Shields Tyra', 'Wardrip Tammara', 'Wenner Tonette', 'Gillian Valentine', 'Inouye Veronika', 'Toelkes Viva', 'Mondella Vallie', 'Giguere Wilda', 'Kolmetz Willard', 'Kusko Willow', 'Schemmer Youlanda', 'Whobrey Yuki']
+names = ['Glick Albina', 'Corrio Ammie', 'Nicka Bette', 'Figeroa Bernardo', 'Pugh Blondell', 'Albares Cammy', 'Lindall Carmelina', 'Hollack Cecily', 'Bruschke Danica', 'Ahle Delmy', 'Dickerson Dominque', 'Foller Donette', 'Lipke Elza', 'Bowley Emerson', 'Ferencz Erick', 'Stenseth Ernie', 'Vocelka Francine', 'Rim Gladys', 'Vanausdal Jamal', 'Briddick Jina', 'Blackwood Kallie', 'Waycott Kanisha', 'Rulapaugh Kati', 'Caldarera Kiley', 'Marrier Kris', 
+         'Gato Lai', 'Reitler Laurel', 'Dilliard Leota', 'Isenhower Lettie', 'Perin Lavera', 'Hochard Malinda', 'Amigon Minna', 'Mastella Marjory', 'Munns Myra', 'Parlato Moon', 'Royster Maryann', 'Fern Natalie', 'Ostrosky Rozella', 'Wieser Sage', 'Morasca Simona', 'Shinko Solange', 'Hoogland Tamar', 'Buvens Tawna', 'Mulqueen Timothy', 'Shields Tyra', 'Wenner Tonette', 'Inouye Veronika', 'Toelkes Viva', 'Giguere Wilda', 'Whobrey Yuki']
+
 
 # Code that creates the names list:
 
 """
 
 names_column = '''  # this column is copied from database
-Honeywell Arlette
 Glick Albina
-Slusarski Alisha
-Iturbide Allene
-Maclead Abel
+Corrio Ammie
+Nicka Bette
+Figeroa Bernardo
 ...
 Whobrey Yuki
 
