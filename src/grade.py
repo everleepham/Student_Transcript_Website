@@ -24,7 +24,7 @@ print(names_list)
 
 """
 
-original = 'grades.html'
+original = '.\sites\grades.html'
 
 def connect(db_host: str, db_port: int, db_user: str, db_password: str, db_name: str) -> mysql.connector.connection.MySQLConnection:
     """
@@ -49,19 +49,26 @@ database_name = 'project'
 
 for name in names:
     new_name = name.replace(' ','_')
-    new_file = f'./{new_name}.html'
+    new_file = f"./sites/grade_html/{new_name}.html"
 
     connection = connect(host, port, user, password, database_name)
     cursor = connection.cursor()
 
-    cursor.execute()
+    cursor.execute(
+    
+        "select s.student_population_code_ref, s.student_epita_email, concat(c.contact_last_name, ' ', c.contact_first_name), s.student_population_period_ref, c.contact_birthdate "
+        "from students s "
+        "join contacts c "
+        "on s.student_contact_ref  = c.contact_email "
+        f"where concat(c.contact_last_name, ' ', c.contact_first_name) like '{name}' "
+    ) #test
 
     data: list[tuple] = cursor.fetchall()
 
     cursor.close()
     connection.close()
 
-    new_file = f'./{new_name}.html'
+    new_file = f"./sites/grade_html/{new_name}.html"
 
     
     with open(original, 'r') as f:
@@ -79,7 +86,7 @@ for name in names:
         temp = temp.replace(r'%student_email%', tup[1])
         temp = temp.replace(r'%student_fullname%', tup[2])
         temp = temp.replace(r'%course_id%', tup[3])
-        temp = temp.replace(r'%grade', tup[4])
+        temp = temp.replace(r'%grade', str(tup[4]))
         grades_rows += temp
 
         if tup[0] == 'AIs':
@@ -100,10 +107,3 @@ for name in names:
 
     print(f'Created {new_file}')
 
-
-
-
-
-    
-
-    

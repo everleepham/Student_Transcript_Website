@@ -6,8 +6,13 @@ body {
     /* background-color: aqua; */
 }
   
+
+p {
+    font-size: 20px;
+}
+
 #wrapper {
-    max-width: 700px;
+    max-width: 800px;
     margin: 0px auto;
 }
   
@@ -34,9 +39,9 @@ body {
 table, th, td {
     border-collapse: collapse;
     border: 1px solid rgb(17, 16, 16);
-    width: 650px;
+    width: 750px;
     font-weight: normal;
-    padding: 8px;
+    padding: 5px;
     text-align: center;
 }
 
@@ -59,7 +64,9 @@ thead {
     height: 2px;
     background-color: rgb(30, 30, 60); 
 }
-
+.custom-link:visited {
+    color:rgb(49, 71, 160)
+}
 .chart {
     margin: 200 auto;
     width: 100px;
