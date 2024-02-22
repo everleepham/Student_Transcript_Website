@@ -38,6 +38,10 @@ for major in majors:
 
     data: list[tuple] = cursor.fetchall()
 
+    cursor.execute()
+
+    value: list[tuple] = cursor.fetchall()
+
     cursor.close()
     connection.close()
 
@@ -50,19 +54,37 @@ for major in majors:
     html = html.replace('%major%', major)
 
     with open('./sites/student_row_fragment.html', 'r') as file:
-        students_rows_template = file.read()
+        students_rows_fragment = file.read()
 
     students_rows = ''
 
     for i, tup in enumerate(data):
         fullname = tup[3].replace(' ', '_')
         student_grade_href = f"./{fullname}.html"   
-        temp = students_rows_template.replace(r'%student_email%', tup[0])
+        temp = students_rows_fragment.replace(r'%grades_href%', student_grade_href)
+        temp = temp.replace(r'%student_email%', tup[0])
         temp = temp.replace(r'%student_fname%', tup[1])
         temp = temp.replace(r'%student_lname%', tup[2])
         temp = temp.replace(r'%student_fullname%', tup[3])
         temp = temp.replace(r'%pass_count%', f'{tup[4]} / {tup[5]}')
-        temp = temp.replace(r'%grades_href%', student_grade_href)
         students_rows += temp
 
+    with open('./sites/course_row_fragment.html', 'r') as file:
+        courses_rows_fragment = file.read()
+    
+    courses_row = ''
+
+    for i, tup in enumerate(value):
+        temp = courses_rows_fragment.replace(r'%course_id%', tup[0])
+        temp = temp.replace(r'%course_name%', tup[1])
+        temp = temp.replace(r'%sessions_count%', tup[2])
+        courses_row += temp
+
+    html = html.replace('%student_rows%', students_rows)
+    html = html.replace("%courses_rows%", courses_row)
+
+    with open(new_file, 'w') as f: 
+        f.write(html)
+
+    print(f'Created {new_file}')
     
