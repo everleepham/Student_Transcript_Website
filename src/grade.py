@@ -1,19 +1,19 @@
 import mysql.connector
 import os
 
-names = ['Glick Albina', 'Corrio Ammie', 'Nicka Bette', 'Figeroa Bernardo', 'Pugh Blondell', 'Albares Cammy', 'Lindall Carmelina', 'Hollack Cecily', 'Bruschke Danica', 'Ahle Delmy', 'Dickerson Dominque', 'Foller Donette', 'Lipke Elza', 'Bowley Emerson', 'Ferencz Erick', 'Stenseth Ernie', 'Vocelka Francine', 'Rim Gladys', 'Vanausdal Jamal', 'Briddick Jina', 'Blackwood Kallie', 'Waycott Kanisha', 'Rulapaugh Kati', 'Caldarera Kiley', 'Marrier Kris', 
-         'Gato Lai', 'Reitler Laurel', 'Dilliard Leota', 'Isenhower Lettie', 'Perin Lavera', 'Hochard Malinda', 'Amigon Minna', 'Mastella Marjory', 'Munns Myra', 'Parlato Moon', 'Royster Maryann', 'Fern Natalie', 'Ostrosky Rozella', 'Wieser Sage', 'Morasca Simona', 'Shinko Solange', 'Hoogland Tamar', 'Buvens Tawna', 'Mulqueen Timothy', 'Shields Tyra', 'Wenner Tonette', 'Inouye Veronika', 'Toelkes Viva', 'Giguere Wilda', 'Whobrey Yuki']
-
+names = ['Albina Glick', 'Ammie Corrio', 'Bette Nicka', 'Bernardo Figeroa', 'Blondell Pugh', 'Cammy Albares', 'Carmelina Lindall', 'Cecily Hollack', 'Danica Bruschke', 'Delmy Ahle', 'Dominque Dickerson', 'Donette Foller', 'Elza Lipke', 'Emerson Bowley', 'Erick Ferencz', 'Ernie Stenseth', 'Francine Vocelka', 'Gladys Rim', 'Jamal Vanausdal', 'Jina Briddick', 'Kallie Blackwood', 'Kanisha Waycott', 'Kati Rulapaugh', 'Kiley Caldarera', 'Kris Marrier', 'Lai Gato', 
+         'Laurel Reitler', 'Leota Dilliard', 'Lettie Isenhower', 'Lavera Perin', 'Malinda Hochard', 'Minna Amigon', 'Marjory Mastella', 'Myra Munns', 'Moon Parlato', 'Maryann Royster', 'Natalie Fern', 'Rozella Ostrosky', 'Sage Wieser', 'Simona Morasca', 'Solange Shinko', 'Tamar Hoogland', 'Tawna Buvens', 'Timothy Mulqueen', 'Tyra Shields', 'Tonette Wenner', 'Veronika Inouye', 'Viva Toelkes', 'Wilda Giguere', 'Yuki Whobrey']
 
 # Code that creates the names list:
 
 """
 
 names_column = '''  # this column is copied from database
-Glick Albina
-Corrio Ammie
-Nicka Bette
-Figeroa Bernardo
+Albina Glick
+Ammie Corrio
+Bette Nicka
+Bernardo Figeroa
+Blondell Pugh
 ...
 Whobrey Yuki
 
@@ -45,7 +45,7 @@ host = 'localhost'
 port = 3245  
 user = 'admin'
 password = 'admin'
-database_name = 'project'
+database_name = 'project'   
 
 
 for name in names:
@@ -56,12 +56,11 @@ for name in names:
     cursor = connection.cursor()
 
     cursor.execute(
-    
-        "select s.student_population_code_ref, s.student_epita_email, concat(c.contact_last_name, ' ', c.contact_first_name), s.student_population_period_ref, c.contact_birthdate "
+        "select s.student_population_code_ref, s.student_epita_email, concat(c.contact_first_name, ' ', c.contact_last_name), s.student_population_period_ref, c.contact_birthdate "
         "from students s "
         "join contacts c "
         "on s.student_contact_ref  = c.contact_email "
-        f"where concat(c.contact_last_name, ' ', c.contact_first_name) like '{name}' "
+        f"where concat(c.contact_first_name, ' ', c.contact_last_name) like '{name}' "
     ) #test
 
     data: list[tuple] = cursor.fetchall()

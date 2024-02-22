@@ -33,9 +33,10 @@ for major in majors:
     cursor = connection.cursor()
 
     cursor.execute(
-        "select s.student_epita_email, c.contact_first_name, c.contact_last_name, concat(c.contact_last_name, ' ', c.contact_first_name) as fullname, c.contact_address, c.contact_country "
+        "select s.student_epita_email, c.contact_first_name, c.contact_last_name, concat(c.contact_first_name, ' ', c.contact_last_name) as fullname, c.contact_address, c.contact_country "
         "from contacts c join students s "
         "on c.contact_email = s.student_contact_ref "
+        f"where s.student_population_code_ref like '{major}'"
     )  # test
 
     data: list[tuple] = cursor.fetchall()
@@ -49,7 +50,6 @@ for major in majors:
     cursor.close()
     connection.close()
 
-for major in majors:
     new_file = f"./sites/population_html/{major}.html"
 
     with open(original, "r") as f:
