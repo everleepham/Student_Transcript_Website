@@ -49,13 +49,13 @@ thead {
     background-color: #cdcbcb;
 }
 
-.custom-link {
+a {
     position: relative;
     color: #000; 
     text-decoration: none; 
 }
 
-.custom-link:hover::after {
+a:hover::after {
     content: '';
     position: absolute;
     left: 0;
@@ -64,7 +64,7 @@ thead {
     height: 2px;
     background-color: rgb(30, 30, 60); 
 }
-.custom-link:visited {
+a:visited {
     color:rgb(49, 71, 160)
 }
 .chart {

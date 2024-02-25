@@ -63,7 +63,7 @@ for name in names:
         f"where concat(c.contact_first_name, ' ', c.contact_last_name) like '{name}' "
     ) #test
 
-    data: list[tuple] = cursor.fetchall()
+    data = cursor.fetchall()
 
     cursor.close()
     connection.close()
