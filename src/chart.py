@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import mysql.connector
+import numpy as np
 import os
 
 
@@ -34,17 +35,64 @@ cursor.execute(
 
 pop_percentage = cursor.fetchall()
 
+cursor.execute(
+    "select s.student_population_code_ref, "
+    "round(sum(a.attendance_presence) / count(*) * 100) as percentage "
+    "from attendance a "
+    "join students s "
+    "on a.attendance_student_ref = s.student_epita_email "
+    "group by s.student_population_code_ref "
+)
+
+att_percentae = cursor.fetchall()
 
 
-# Dữ liệu
-sizes = [15, 30, 45, 10]
-labels = ['CS', 'AIs', 'ISM', 'DSA', 'SE']
-colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue']  # Các màu tương ứng với các phần
+cursor.close()
+connection.close()
 
-# Vẽ biểu đồ tròn
-plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%')
 
-# Hiển thị biểu đồ
-plt.axis('equal')  # Đảm bảo biểu đồ tròn
+# pie chart
+size = []
+labels = []
+
+for tup in pop_percentage:
+    size.append(tup[1])
+    labels.append(tup[0])
+
+
+colors = ['plum', 'cornflowerblue','lightpink', 'mediumaquamarine', 'navajowhite',]
+
+plt.pie(size, labels=labels, colors=colors, autopct='%1.1f%%', textprops={'fontsize': 11})
+
+plt.rcParams['font.size'] = 13
+
+plt.axis('equal') 
+plt.title('Populations', pad=20)
+plt.savefig('sites/population.png')
+plt.show()
+plt.close()
+
+
+# bar chart
+categories = []
+values = []
+
+for tup in att_percentae:
+    categories.append(tup[0])
+    values.append(tup[1])
+
+width = 0.5  
+
+plt.bar(categories, values, color=colors, width=width)
+
+for i in range(len(categories)):
+    plt.text(i, float(values[i]) + 0.1, f"{str(values[i])}%", ha='center')
+
+plt.xlabel('Majors')
+plt.ylabel('Attendance percentage')
+plt.title('Overall attendance', pad=20)
+
+plt.savefig('sites/attendance.png')
 plt.show()
 
+plt.close()
