@@ -1,10 +1,10 @@
 import mysql.connector
+from datetime import datetime
 import os
 
 names = ['Albina Glick', 'Ammie Corrio', 'Bette Nicka', 'Bernardo Figeroa', 'Blondell Pugh', 'Cammy Albares', 'Carmelina Lindall', 'Cecily Hollack', 'Danica Bruschke', 'Delmy Ahle', 'Dominque Dickerson', 'Donette Foller', 'Elza Lipke', 'Emerson Bowley', 'Erick Ferencz', 'Ernie Stenseth', 'Francine Vocelka', 'Gladys Rim', 'Jamal Vanausdal', 'Jina Briddick', 'Kallie Blackwood', 'Kanisha Waycott', 'Kati Rulapaugh', 'Kiley Caldarera', 'Kris Marrier', 'Lai Gato', 
          'Laurel Reitler', 'Leota Dilliard', 'Lettie Isenhower', 'Lavera Perin', 'Malinda Hochard', 'Minna Amigon', 'Marjory Mastella', 'Myra Munns', 'Moon Parlato', 'Maryann Royster', 'Natalie Fern', 'Rozella Ostrosky', 'Sage Wieser', 'Simona Morasca', 'Solange Shinko', 'Tamar Hoogland', 'Tawna Buvens', 'Timothy Mulqueen', 'Tyra Shields', 'Tonette Wenner', 'Veronika Inouye', 'Viva Toelkes', 'Wilda Giguere', 'Yuki Whobrey']
 
-# Code that creates the names list:
 
 """
 
@@ -24,6 +24,11 @@ names_list = names_column.strip().split('\n')
 print(names_list)
 
 """
+
+intake_mapping = {
+    'FALL': 'F2020',
+    'SPRING': 'S2021'
+}
 
 original = '.\sites\grades.html'
 
@@ -89,21 +94,16 @@ for name in names:
         temp = temp.replace(r'%grade', str(tup[4]))
         grades_rows += temp
 
-        if tup[0] == 'AIs':
-            html = html.replace('%major%', 'AIs')
-        elif tup[0] == 'CS':
-            html = html.replace('%major%', 'CS')
-        elif tup[0] == 'ISM':
-            html = html.replace('%major%', 'ISM')
-        elif tup[0] == 'DSA':
-            html = html.replace('%major%', 'DSA')
-        else:
-            html = html.replace('%major%', 'SE')
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime('%d/%m/%Y')
 
+    html = html.replace('%datetime%', formatted_datetime)
+
+    html = html.replace('%major%', tup[0])
+    html = html.replace('%intake%', intake_mapping.get(tup[3]))
     html = html.replace('%grade_rows%', grades_rows)
 
     with open(new_file, 'w') as f:
         f.write(html)
 
     print(f'Created {new_file}')
-

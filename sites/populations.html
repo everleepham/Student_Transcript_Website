@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grades</title>
+    <title>Populations</title>
     <link rel="stylesheet" type="text/css" href="../main.css">
     
 </head>
@@ -12,11 +12,12 @@
 <body>
     <div id="wrapper">
         <div id="header">
-            <p>Population - <b>%major% F2021</b></p>
+            <p><a href=../index.html>Welcome</a> - Population - <b>%major% </b></p>
 
         <br>
         <div id="students">
-            <p id="table_title"><b>Students</b></p>
+            <h2><b>Students</b></h2>
+            <p id="sub_title"><u>Fall intake - F2020</u></p>
             <table>
                 <thead>
                     <tr>
@@ -28,14 +29,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    %students_rows%
+                    %students_rows_fall%
                 </tbody>
             </table>
-
+            <br>
+            <p id="sub_title"><u>Spring intake - S2021</u></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Full Name</th>
+                        <th>Passed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    %students_rows_spring%
+                </tbody>
+            </table>
             <br>
             
             <div id="courses">
-                <p><b>Courses</b></p>
+                <h2><b>Courses</b></h2>
                 <table>
                     <thead>
                         <tr>
@@ -51,7 +67,7 @@
                 </table>
             </div>
             <div id="footer">
-                <p><i>Website last generation: 10th January 2023</i></p>
+                <p><i>Website last generation: %datetime%</i></p>
         </div>
     </div>
     
