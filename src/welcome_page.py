@@ -15,7 +15,6 @@ def connect(
     )
     return conn
 
-
 host = "localhost"
 port = 3245
 user = "admin"

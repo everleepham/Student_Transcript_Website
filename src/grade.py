@@ -5,7 +5,6 @@ import os
 names = ['Albina Glick', 'Ammie Corrio', 'Bette Nicka', 'Bernardo Figeroa', 'Blondell Pugh', 'Cammy Albares', 'Carmelina Lindall', 'Cecily Hollack', 'Danica Bruschke', 'Delmy Ahle', 'Dominque Dickerson', 'Donette Foller', 'Elza Lipke', 'Emerson Bowley', 'Erick Ferencz', 'Ernie Stenseth', 'Francine Vocelka', 'Gladys Rim', 'Jamal Vanausdal', 'Jina Briddick', 'Kallie Blackwood', 'Kanisha Waycott', 'Kati Rulapaugh', 'Kiley Caldarera', 'Kris Marrier', 'Lai Gato', 
          'Laurel Reitler', 'Leota Dilliard', 'Lettie Isenhower', 'Lavera Perin', 'Malinda Hochard', 'Minna Amigon', 'Marjory Mastella', 'Myra Munns', 'Moon Parlato', 'Maryann Royster', 'Natalie Fern', 'Rozella Ostrosky', 'Sage Wieser', 'Simona Morasca', 'Solange Shinko', 'Tamar Hoogland', 'Tawna Buvens', 'Timothy Mulqueen', 'Tyra Shields', 'Tonette Wenner', 'Veronika Inouye', 'Viva Toelkes', 'Wilda Giguere', 'Yuki Whobrey']
 
-
 """
 
 names_column = '''  # this column is copied from database
@@ -61,12 +60,15 @@ for name in names:
     cursor = connection.cursor()
 
     cursor.execute(
-        "select s.student_population_code_ref, s.student_epita_email, concat(c.contact_first_name, ' ', c.contact_last_name), s.student_population_period_ref, c.contact_birthdate "
-        "from students s "
-        "join contacts c "
-        "on s.student_contact_ref  = c.contact_email "
+        "select s.student_epita_email, c.contact_first_name, c.contact_last_name, concat(c.contact_first_name, ' ', c.contact_last_name) as fullname, s.student_population_period_ref, "
+        "s.student_population_code_ref,g.grade_course_code_ref, sum(g.grade_score * e.exam_weight) / sum(e.exam_weight) as grade "
+        "from contacts c "
+        "join students s on c.contact_email = s.student_contact_ref "
+        "join grades g on s.student_epita_email = g.grade_student_epita_email_ref "
+        "join exams e on g.grade_course_code_ref = e.exam_course_code "
         f"where concat(c.contact_first_name, ' ', c.contact_last_name) like '{name}' "
-    ) #test
+        "group by e.exam_course_code, s.student_epita_email, c.contact_last_name, c.contact_last_name "
+    )
 
     data = cursor.fetchall()
 
@@ -75,7 +77,6 @@ for name in names:
 
     new_file = f"./sites/grade_html/{new_name}.html"
 
-    
     with open(original, 'r') as f:
         html = f.read()
 
@@ -87,20 +88,21 @@ for name in names:
     grades_rows = ""
 
     for i, tup in enumerate(data):
-        temp = grades_row_fragment.replace(r'%student_major%', tup[0])
-        temp = temp.replace(r'%student_email%', tup[1])
-        temp = temp.replace(r'%student_fullname%', tup[2])
-        temp = temp.replace(r'%course_id%', tup[3])
-        temp = temp.replace(r'%grade', str(tup[4]))
+        grade_str = str(tup[7])
+        grade = grade_str.rstrip('0').rstrip('.') if '.' in grade_str else grade_str
+        temp = grades_row_fragment.replace(r'%student_email%', tup[0])
+        temp = temp.replace(r'%student_fname%', tup[1])
+        temp = temp.replace(r'%student_lname%', tup[2])
+        temp = temp.replace(r'%course_id%', tup[6])
+        temp = temp.replace(r'%grade%', str(grade))
         grades_rows += temp
 
     current_datetime = datetime.now()
     formatted_datetime = current_datetime.strftime('%d/%m/%Y')
 
     html = html.replace('%datetime%', formatted_datetime)
-
-    html = html.replace('%major%', tup[0])
-    html = html.replace('%intake%', intake_mapping.get(tup[3]))
+    html = html.replace('%major%', tup[5])
+    html = html.replace('%intake%', intake_mapping.get(tup[4]))
     html = html.replace('%grade_rows%', grades_rows)
 
     with open(new_file, 'w') as f:

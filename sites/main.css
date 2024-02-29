@@ -3,10 +3,9 @@ body {
     line-height: 1.6;
 
     font-family: Cambria;
-    /* background-color: aqua; */
+    color:rgb(54, 49, 49)
 }
   
-
 p {
     font-size: 20px;
 }
@@ -49,13 +48,13 @@ thead {
     background-color: #cdcbcb;
 }
 
-a {
+.custom_link {
     position: relative;
     color: #000; 
     text-decoration: none; 
 }
 
-a:hover::after {
+.custom_link:hover::after {
     content: '';
     position: absolute;
     left: 0;
@@ -64,16 +63,33 @@ a:hover::after {
     height: 2px;
     background-color: rgb(30, 30, 60); 
 }
-a:visited {
-    color:rgb(49, 71, 160)
-}
-.chart {
-    margin: 200 auto;
-    width: 100px;
-    height: 500px;
+/* .custom_link:visited {
+    color:rgb(43, 69, 176)
+} */
+
+.custom_link {
+    color:rgb(54, 49, 49)
 }
 
 #attendance {
     width: 450px;
     height: 90px;
 }
+
+img {
+    width: 370px;
+    height: auto;
+}
+
+#sub_title {
+    text-align: center;
+}
+
+.custom {
+    text-decoration: underline;
+    color:#000
+}
+
+.custom:hover {
+    font-weight: bold; 
+} 
