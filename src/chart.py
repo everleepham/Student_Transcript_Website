@@ -1,21 +1,6 @@
 import matplotlib.pyplot as plt
-import mysql.connector
-import numpy as np
+from welcome_page import connect
 import os
-
-
-def connect(
-    db_host: str, db_port: int, db_user: str, db_password: str, db_name: str
-) -> mysql.connector.connection.MySQLConnection:
-    """
-    Connects to the MySQL database
-    :return: a connection object
-    """
-    conn = mysql.connector.connect(
-        host=db_host, port=db_port, user=db_user, password=db_password, database=db_name
-    )
-    return conn
-
 
 host = "localhost"
 port = 3245
@@ -44,55 +29,68 @@ cursor.execute(
     "group by s.student_population_code_ref "
 )
 
-att_percentae = cursor.fetchall()
+att_percentage = cursor.fetchall()
 
 
 cursor.close()
 connection.close()
 
-
-# pie chart
-size = []
-labels = []
-
-for tup in pop_percentage:
-    size.append(tup[1])
-    labels.append(tup[0])
-
-
-colors = ['plum', 'cornflowerblue','lightpink', 'mediumaquamarine', 'navajowhite',]
-
-plt.pie(size, labels=labels, colors=colors, autopct='%1.1f%%', textprops={'fontsize': 11})
-
-plt.rcParams['font.size'] = 13
-
-plt.axis('equal') 
-plt.title('Populations', pad=20)
-plt.savefig('sites/population.png')
-plt.show()
-plt.close()
+colors = [
+    "plum",
+    "cornflowerblue",
+    "lightpink",
+    "mediumaquamarine",
+    "navajowhite",
+]
 
 
-# bar chart
-categories = []
-values = []
+def draw_pie_chart(data, output_filename):
+    labels = [tup[0] for tup in data]
+    size = [tup[1] for tup in data]
 
-for tup in att_percentae:
-    categories.append(tup[0])
-    values.append(tup[1])
+    plt.pie(
+        size,
+        labels=labels,
+        colors=colors,
+        autopct="%1.1f%%",
+        textprops={"fontsize": 11},
+    )
 
-width = 0.5  
+    plt.rcParams["font.size"] = 13
+    plt.axis("equal")
+    plt.title("Populations", pad=20)
+    plt.savefig(output_filename)
+    plt.show()
+    plt.close()
 
-plt.bar(categories, values, color=colors, width=width)
 
-for i in range(len(categories)):
-    plt.text(i, float(values[i]) + 0.1, f"{str(values[i])}%", ha='center')
+def draw_bar_chart(data, output_filename):
+    categories = [tup[0] for tup in data]
+    values = [tup[1] for tup in data]
 
-plt.xlabel('Majors')
-plt.ylabel('Attendance percentage')
-plt.title('Overall attendance', pad=20)
+    width = 0.5
 
-plt.savefig('sites/attendance.png')
-plt.show()
+    plt.bar(categories, values, color=colors, width=width)
 
-plt.close()
+    for i in range(len(categories)):
+        plt.text(
+            i,
+            float(values[i]) + 0.1,
+            f"{str(values[i])}%",
+            ha="center",
+            va="bottom",
+            fontsize=10,
+        )
+
+    plt.xlabel("Majors")
+    plt.ylabel("Attendance percentage")
+    plt.title("Overall attendance", pad=20)
+
+    plt.savefig(output_filename)
+    plt.show()
+
+    plt.close()
+
+
+draw_pie_chart(pop_percentage, "sites/population.png")
+draw_bar_chart(att_percentage, "sites/attendance.png")
