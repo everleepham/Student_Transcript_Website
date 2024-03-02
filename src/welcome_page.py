@@ -1,7 +1,5 @@
 import mysql.connector
 from datetime import datetime
-import os
-
 
 def connect(
     db_host: str, db_port: int, db_user: str, db_password: str, db_name: str
@@ -19,49 +17,54 @@ host = "localhost"
 port = 3245
 user = "admin"
 password = "admin"
-database_name = "project"
+database_name = "project"   
 
-with open("./sites/welcome_page.html", "r") as file:
-    html = file.read()
+def format_date(datetime):
+    return datetime.strftime("%d/%m/%Y") 
 
-connection = connect(host, port, user, password, database_name)
-cursor = connection.cursor()
+def main():
+    with open("./sites/welcome_page.html", "r") as file:
+        html = file.read()
 
-cursor.execute(
-    "select s.student_population_code_ref, count(s.student_epita_email) FROM students s group by s.student_population_code_ref  "
-)
-pop_data = cursor.fetchall()
+    connection = connect(host, port, user, password, database_name)
+    cursor = connection.cursor()
 
-cursor.execute(
-    "select s.student_population_code_ref, "
-    "round(sum(a.attendance_presence) / count(*) * 100) as percentage "
-    "from attendance a "
-    "join students s "
-    "on a.attendance_student_ref = s.student_epita_email "
-    "group by s.student_population_code_ref "
-)
+    cursor.execute(
+        "select s.student_population_code_ref, count(s.student_epita_email) FROM students s group by s.student_population_code_ref  "
+    )
+    pop_data = cursor.fetchall()
 
-att_data = cursor.fetchall()
+    cursor.execute(
+        "select s.student_population_code_ref, "
+        "round(sum(a.attendance_presence) / count(*) * 100) as percentage "
+        "from attendance a "
+        "join students s "
+        "on a.attendance_student_ref = s.student_epita_email "
+        "group by s.student_population_code_ref "
+    )
 
-cursor.close()
-connection.close()
+    att_data = cursor.fetchall()
 
-
-for course, value in pop_data:
-    placeholder = f"(%pop_{course.lower()}%)"
-    html = html.replace(placeholder, str(value))
+    cursor.close()
+    connection.close()
 
 
-for att, value in att_data:
-    placeholder = f"(%att_{att.lower()}%)"
-    html = html.replace(placeholder, str(value))
+    for course, value in pop_data:
+        placeholder = f"(%pop_{course.lower()}%)"
+        html = html.replace(placeholder, str(value))
 
-current_datetime = datetime.now()
-formatted_datetime = current_datetime.strftime('%d/%m/%Y')
 
-html = html.replace('%datetime%', formatted_datetime)
+    for att, value in att_data:
+        placeholder = f"(%att_{att.lower()}%)"
+        html = html.replace(placeholder, str(value))
 
-with open("./sites/index.html", "w") as file:
-    file.write(html)
+    formatted_datetime = format_date(datetime.now())
+    html = html.replace('%datetime%', formatted_datetime)
 
-print(f"Created {file}")
+    with open("./sites/index.html", "w") as file:
+        file.write(html)
+
+    print(f"Created {file}")
+
+if __name__ == "__main__":
+    main()
