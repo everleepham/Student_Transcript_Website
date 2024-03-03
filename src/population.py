@@ -1,16 +1,9 @@
 from datetime import datetime
-from welcome_page import connect
+from welcome_page import connect, format_date
 
 majors = ["AIs", "CS", "ISM", "DSA", "SE"]
 
 original = ".\sites\populations.html"
-
-
-host = "localhost"
-port = 3245
-user = "admin"
-password = "admin"
-database_name = "project"
 
 
 def replace_in_html(html_content, replacements):
@@ -23,7 +16,7 @@ def main():
     for major in majors:
         new_file = f"./sites/population_html/{major}.html"
 
-        connection = connect(host, port, user, password, database_name)
+        connection = connect()
         cursor = connection.cursor()
 
         cursor.execute(
@@ -97,8 +90,7 @@ def main():
             temp = temp.replace("%gcourse_href%", gcourse_href)
             courses_row += temp
 
-        current_datetime = datetime.now()
-        formatted_datetime = current_datetime.strftime("%d/%m/%Y")
+        formatted_datetime = format_date(datetime.now())
 
         html = replace_in_html(
             html,

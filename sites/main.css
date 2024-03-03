@@ -1,9 +1,7 @@
 body {
     font-size: 17px;
     line-height: 1.6;
-
     font-family: Cambria;
-    color:rgb(54, 49, 49)
 }
   
 p {
@@ -31,9 +29,6 @@ p {
     padding: 15px;
 }
 
-#thead {
-    font-weight: bold;
-}
 
 table, th, td {
     border-collapse: collapse;

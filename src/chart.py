@@ -1,14 +1,8 @@
 import matplotlib.pyplot as plt
 from welcome_page import connect
-import os
 
-host = "localhost"
-port = 3245
-user = "admin"
-password = "admin"
-database_name = "project"
 
-connection = connect(host, port, user, password, database_name)
+connection = connect()
 cursor = connection.cursor()
 
 cursor.execute(
@@ -88,7 +82,6 @@ def draw_bar_chart(data, output_filename):
 
     plt.savefig(output_filename)
     plt.show()
-
     plt.close()
 
 

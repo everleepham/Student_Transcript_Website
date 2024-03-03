@@ -19,17 +19,12 @@ courses = [
 
 original = ".\sites\course_grade.html"
 
-host = "localhost"
-port = 3245
-user = "admin"
-password = "admin"
-database_name = "project"
 
 def main():
     for course in courses:
         new_file = f"./sites/course_grade_html/{course}.html"
 
-        connection = connect(host, port, user, password, database_name)
+        connection = connect()
         cursor = connection.cursor()
 
         cursor.execute(
@@ -61,7 +56,7 @@ def main():
         gcourse_rows_fall = ""
         gcourse_rows_spring = ""
 
-        for i, tup in enumerate(data):
+        for tup in data:
             grade_str = str(tup[6])
             grade = grade_str.rstrip("0").rstrip(".") if "." in grade_str else grade_str
             html = html.replace("%course%", tup[7])
@@ -76,19 +71,20 @@ def main():
             else:
                 gcourse_rows_spring += temp
 
-        
-        formatted_datetime = format_date(datetime.now())
-
-        html = replace_in_html(html, {
+        html = replace_in_html(
+            html,
+            {
                 "%gcourse_rows_fall%": gcourse_rows_fall,
                 "%gcourse_rows_spring%": gcourse_rows_spring,
-                "%datetime%": formatted_datetime
-        })
-  
+                "%datetime%": format_date(datetime.now()),
+            },
+        )
+
         with open(new_file, "w") as f:
             f.write(html)
 
         print(f"Created {new_file}")
+
 
 if __name__ == "__main__":
     main()

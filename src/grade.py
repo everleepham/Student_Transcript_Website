@@ -29,19 +29,12 @@ intake_mapping = {"FALL": "F2020", "SPRING": "S2021"}
 original = ".\sites\grades.html"
 
 
-host = "localhost"
-port = 3245
-user = "admin"
-password = "admin"
-database_name = "project"
-
-
 def main():
     for name in names:
         new_name = name.replace(" ", "_")
         new_file = f"./sites/grade_html/{new_name}.html"
 
-        connection = connect(host, port, user, password, database_name)
+        connection = connect()
         cursor = connection.cursor()
 
         cursor.execute(
@@ -72,7 +65,7 @@ def main():
 
         grades_rows = ""
 
-        for i, tup in enumerate(data):
+        for tup in data:
             grade_str = str(tup[7])
             grade = grade_str.rstrip("0").rstrip(".") if "." in grade_str else grade_str
             temp = grades_row_fragment.replace(r"%student_email%", tup[0])
@@ -81,8 +74,7 @@ def main():
             temp = temp.replace(r"%course_id%", tup[6])
             temp = temp.replace(r"%grade%", str(grade))
             grades_rows += temp
-
-        formatted_datetime = format_date(datetime.now())
+            
 
         html = replace_in_html(
             html,
@@ -90,7 +82,7 @@ def main():
                 "%major%": tup[5],
                 "%intake%": intake_mapping.get(tup[4]),
                 "%grade_rows%": grades_rows,
-                "%datetime%": formatted_datetime,
+                "%datetime%": format_date(datetime.now()),
             },
         )
 
