@@ -17,33 +17,28 @@ courses = [
     "SE_ADV_JS",
 ]
 
-original = ".\sites\course_grade.html"
+original = "sites/course_grade.html"
 
 
 def main():
     for course in courses:
         new_file = f"./sites/course_grade_html/{course}.html"
 
-        connection = connect()
-        cursor = connection.cursor()
+        with connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                "select s.student_epita_email, c.contact_first_name, c.contact_last_name, s.student_population_period_ref, "
+                "s.student_population_code_ref,g.grade_course_code_ref, sum(g.grade_score * e.exam_weight) / sum(e.exam_weight) as grade, c2.course_name  "
+                "from contacts c "
+                "join students s on c.contact_email = s.student_contact_ref "
+                "join grades g on s.student_epita_email = g.grade_student_epita_email_ref "
+                "join exams e on g.grade_course_code_ref = e.exam_course_code "
+                "join courses c2 on e.exam_course_code = c2.course_code "
+                f"where e.exam_course_code  like '{course}' "
+                "group by e.exam_course_code, s.student_epita_email, c2.course_name  "
+                "order by s.student_population_code_ref "
+            )
 
-        cursor.execute(
-            "select s.student_epita_email, c.contact_first_name, c.contact_last_name, s.student_population_period_ref, "
-            "s.student_population_code_ref,g.grade_course_code_ref, sum(g.grade_score * e.exam_weight) / sum(e.exam_weight) as grade, c2.course_name  "
-            "from contacts c "
-            "join students s on c.contact_email = s.student_contact_ref "
-            "join grades g on s.student_epita_email = g.grade_student_epita_email_ref "
-            "join exams e on g.grade_course_code_ref = e.exam_course_code "
-            "join courses c2 on e.exam_course_code = c2.course_code "
-            f"where e.exam_course_code  like '{course}' "
-            "group by e.exam_course_code, s.student_epita_email, c2.course_name  "
-            "order by s.student_population_code_ref "
-        )
-
-        data = cursor.fetchall()
-
-        cursor.close()
-        connection.close()
+            data = cursor.fetchall()
 
         new_file = f"./sites/course_grade_html/{course}.html"
 

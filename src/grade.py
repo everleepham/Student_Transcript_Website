@@ -5,6 +5,8 @@ from datetime import datetime
 names = ['Albina Glick', 'Ammie Corrio', 'Bette Nicka', 'Bernardo Figeroa', 'Blondell Pugh', 'Cammy Albares', 'Carmelina Lindall', 'Cecily Hollack', 'Danica Bruschke', 'Delmy Ahle', 'Dominque Dickerson', 'Donette Foller', 'Elza Lipke', 'Emerson Bowley', 'Erick Ferencz', 'Ernie Stenseth', 'Francine Vocelka', 'Gladys Rim', 'Jamal Vanausdal', 'Jina Briddick', 'Kallie Blackwood', 'Kanisha Waycott', 'Kati Rulapaugh', 'Kiley Caldarera', 'Kris Marrier', 'Lai Gato', 
          'Laurel Reitler', 'Leota Dilliard', 'Lettie Isenhower', 'Lavera Perin', 'Malinda Hochard', 'Minna Amigon', 'Marjory Mastella', 'Myra Munns', 'Moon Parlato', 'Maryann Royster', 'Natalie Fern', 'Rozella Ostrosky', 'Sage Wieser', 'Simona Morasca', 'Solange Shinko', 'Tamar Hoogland', 'Tawna Buvens', 'Timothy Mulqueen', 'Tyra Shields', 'Tonette Wenner', 'Veronika Inouye', 'Viva Toelkes', 'Wilda Giguere', 'Yuki Whobrey']
 
+
+# Code that creates names list:
 """
 
 names_column = '''  # this column is copied from database
@@ -18,15 +20,15 @@ Whobrey Yuki
 
 '''
 
-names_list = names_column.strip().split('\n')
+names = names_column.strip().split('\n')
 
-print(names_list)
+print(names)
 
 """
 
 intake_mapping = {"FALL": "F2020", "SPRING": "S2021"}
 
-original = ".\sites\grades.html"
+original = "sites/grades.html"
 
 
 def main():
@@ -34,24 +36,19 @@ def main():
         new_name = name.replace(" ", "_")
         new_file = f"./sites/grade_html/{new_name}.html"
 
-        connection = connect()
-        cursor = connection.cursor()
+        with connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                "select s.student_epita_email, c.contact_first_name, c.contact_last_name, concat(c.contact_first_name, ' ', c.contact_last_name) as fullname, s.student_population_period_ref, "
+                "s.student_population_code_ref,g.grade_course_code_ref, sum(g.grade_score * e.exam_weight) / sum(e.exam_weight) as grade "
+                "from contacts c "
+                "join students s on c.contact_email = s.student_contact_ref "
+                "join grades g on s.student_epita_email = g.grade_student_epita_email_ref "
+                "join exams e on g.grade_course_code_ref = e.exam_course_code "
+                f"where concat(c.contact_first_name, ' ', c.contact_last_name) like '{name}' "
+                "group by e.exam_course_code, s.student_epita_email, c.contact_last_name, c.contact_last_name "
+            )
 
-        cursor.execute(
-            "select s.student_epita_email, c.contact_first_name, c.contact_last_name, concat(c.contact_first_name, ' ', c.contact_last_name) as fullname, s.student_population_period_ref, "
-            "s.student_population_code_ref,g.grade_course_code_ref, sum(g.grade_score * e.exam_weight) / sum(e.exam_weight) as grade "
-            "from contacts c "
-            "join students s on c.contact_email = s.student_contact_ref "
-            "join grades g on s.student_epita_email = g.grade_student_epita_email_ref "
-            "join exams e on g.grade_course_code_ref = e.exam_course_code "
-            f"where concat(c.contact_first_name, ' ', c.contact_last_name) like '{name}' "
-            "group by e.exam_course_code, s.student_epita_email, c.contact_last_name, c.contact_last_name "
-        )
-
-        data = cursor.fetchall()
-
-        cursor.close()
-        connection.close()
+            data = cursor.fetchall()
 
         new_file = f"./sites/grade_html/{new_name}.html"
 

@@ -1,33 +1,26 @@
 import matplotlib.pyplot as plt
 from welcome_page import connect
 
+with connect() as connection, connection.cursor() as cursor:
+    cursor.execute(
+        "select s.student_population_code_ref, "
+        "(count(s.student_epita_email) / (select count(*) from students s)) * 100 as percentage "
+        "FROM students s "
+        "group by s.student_population_code_ref "
+    )
 
-connection = connect()
-cursor = connection.cursor()
+    pop_percentage = cursor.fetchall()
 
-cursor.execute(
-    "select s.student_population_code_ref, "
-    "(count(s.student_epita_email) / (select count(*) from students s)) * 100 as percentage "
-    "FROM students s "
-    "group by s.student_population_code_ref "
-)
+    cursor.execute(
+        "select s.student_population_code_ref, "
+        "round(sum(a.attendance_presence) / count(*) * 100) as percentage "
+        "from attendance a "
+        "join students s "
+        "on a.attendance_student_ref = s.student_epita_email "
+        "group by s.student_population_code_ref "
+    )
 
-pop_percentage = cursor.fetchall()
-
-cursor.execute(
-    "select s.student_population_code_ref, "
-    "round(sum(a.attendance_presence) / count(*) * 100) as percentage "
-    "from attendance a "
-    "join students s "
-    "on a.attendance_student_ref = s.student_epita_email "
-    "group by s.student_population_code_ref "
-)
-
-att_percentage = cursor.fetchall()
-
-
-cursor.close()
-connection.close()
+    att_percentage = cursor.fetchall()
 
 colors = [
     "plum",
